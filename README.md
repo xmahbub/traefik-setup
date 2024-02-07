@@ -1,4 +1,11 @@
-### traefik setup for K8S / Kubernetes
+# traefik setup for K8S / Kubernetes
+
+### Clone the repo
+
+```
+git clone https://github.com/xmahbub/traefik-setup.git
+cd traefik-setup
+```
 
 ### Creating Namespace
 ```
