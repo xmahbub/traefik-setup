@@ -1,27 +1,27 @@
-# traefik setup for K8S / Kubernetes
+### traefik setup for K8S / Kubernetes
 
-# Creating Namespace
+### Creating Namespace
 ```
 kubectl create ns traefik
 ```
-# Creating Resource Quota (Optional)
+### Creating Resource Quota (Optional)
 
 ```
 kubectl apply -f resource-quota.yaml -n traefik
 ```
 
-# Changing context
+### Changing context
 ```
 kubectl config set-context --current --namespace=traefik
 ```
-# Add healm repo and Update 
+### Add healm repo and Update 
 ```
 helm repo add traefik https://traefik.github.io/charts
 helm repo update
 ```
-# Create secrate for Acme DNS Challenge
+### Create secrate for Acme DNS Challenge
 
-# Acme DNS will work for everyone no need any extra config just apply my config. This secrate will work for everyone.
+Acme DNS will work for everyone no need any extra config just apply my config. This secrate will work for everyone.
 
 ```
 kubectl apply -f acme-dns-credentials.yml
