@@ -23,13 +23,13 @@ spec:
       - name: nginx # Name of the container
         image: nginx:latest
         volumeMounts:
-        - name: nginx-pvc
+        - name: application-pvc
           mountPath: /usr/share/nginx/html 
         ports:
         - containerPort: 80 
         
       volumes:
-      - name: nginx-pvc
+      - name: application-pvc
         persistentVolumeClaim:
           claimName: application-pvc
         
