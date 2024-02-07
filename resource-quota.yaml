@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-resource-quota
+spec:
+  hard:
+    requests.storage: 10Gi  # Set your default storage size limit here

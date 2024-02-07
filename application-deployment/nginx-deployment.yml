@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx # Name of the deployment
+  namespace: applications # Name of the namespace
+  labels:
+    app: nginx # Name of your application
+
+
+spec:
+  selector:
+    matchLabels:
+      app: nginx # Name of your application
+  replicas: 1 # Number of replicas
+  template:
+    metadata:
+      labels:
+        app: nginx # Name of your application
+    spec:
+      containers:
+      
+      - name: nginx # Name of the container
+        image: nginx:latest
+        volumeMounts:
+        - name: nginx-pvc
+          mountPath: /usr/share/nginx/html 
+        ports:
+        - containerPort: 80 
+        
+      volumes:
+      - name: nginx-pvc
+        persistentVolumeClaim:
+          claimName: application-pvc
+        
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  nginx
+  namespace: applications
+spec:
+  selector:
+    app:  nginx
+  
+  type:  ClusterIP
+  ports:
+  - name:  http
+    port:  80 
+ 
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx # Name of the ingress object
+  namespace: applications # Name of the namespace
+spec:
+  rules:
+  - host: "mahbub.securedsoft.online"  # Your hostname
+    http:
+      paths:
+      # Path-based routing settings:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx  # The name of the service
+            port:
+              number: 80  # Service Portnumber
