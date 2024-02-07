@@ -27,7 +27,7 @@ Acme DNS will work for everyone no need any extra config just apply my config. T
 kubectl apply -f acme-dns-credentials.yml
 ```
 
-# install (Finnaly install traefik)
+### Install Traefik 
 ```
 helm install traefik traefik/traefik --values=traefik-values.yml
 ```
