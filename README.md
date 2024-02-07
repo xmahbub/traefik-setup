@@ -1,4 +1,7 @@
-# traefik setup for K8S / Kubernetes
+<h1 align="center">
+      Traefik Kubernetes Setup
+</h1>
+
 
 ### Clone the repo
 
