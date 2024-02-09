@@ -57,7 +57,7 @@ deployment:
         [
           "sh",
           "-c",
-          "touch /ssl-certs/acme-dns.json; chown 65532 /ssl-certs/acme-dns.json; chmod -v 600 /ssl-certs/acme-dns.json",
+          "touch /ssl-certs/acme-dns.json; chown 65532 /ssl-certs/acme-dns.json; chmod -v 600 /ssl-certs/acme-dns.json && touch /ssl-certs/records.json; chown 65532 /ssl-certs/records.json; chmod -v 600 /ssl-certs/records.json",
         ]
       securityContext:
         runAsNonRoot: false

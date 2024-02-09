@@ -1,0 +1,70 @@
+# mongodb-all-in-one.yaml
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-config
+data:
+  # MongoDB configuration settings
+  mongodb.conf: |
+    storage:
+      dbPath: /data/db
+    net:
+      bindIp: 0.0.0.0
+    security:
+      authorization: enabled
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-secret
+type: Opaque
+data:
+  username: bWFoYnVi
+  password: QEBIYWNreHBsb3JlMTIzNA==
+
+---
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: mongodb
+spec:
+  version: "4.2.2-ent"
+  opsManager:
+    configMapRef:
+      name: mongodb-config
+  credentials: mongodb-secret
+  type: Standalone
+  persistent: true
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongodb
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mongodb-ingress
+spec:
+  rules:
+  - host: db.securedsoft.online  # Replace with your actual hostname
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mongodb
+            port:
+              number: 27017
