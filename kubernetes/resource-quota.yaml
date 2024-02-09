@@ -4,4 +4,4 @@ metadata:
   name: default-resource-quota
 spec:
   hard:
-    requests.storage: 10Gi  # Set your default storage size limit here
+    requests.storage: 3Gi  # Set your default storage size limit here
