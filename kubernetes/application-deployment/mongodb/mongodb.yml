@@ -55,3 +55,6 @@ spec:
     certResolver: acme-dns          
     domains:                    
     - main: mongodb.securedsoft.online 
+
+# connection url will be
+# mongodb://root:password@mongodb.securedsoft.online:30001/?tls=true
