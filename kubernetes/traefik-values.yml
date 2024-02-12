@@ -1,24 +1,31 @@
 additionalArguments:
+ - --api.insecure=true
  - --certificatesresolvers.acme-dns.acme.dnschallenge.provider=acme-dns
  - --certificatesresolvers.acme-dns.acme.email=admin@securedsoft.online
  - --certificatesresolvers.acme-dns.acme.storage=/ssl-certs/acme-dns.json
-
+ 
 logs:
-# Configure log settings here...
+
   general:
     level: ERROR
 
 ports:
-# Configure your entrypoints here...
+  database:
+      expose: true
+      nodePort: 30001
+      port: 30001
+      protocol: TCP
+
   web:
-    # (optional) Permanent Redirect to HTTPS
+    
     redirectTo: 
        port: websecure
   websecure:
     tls:
       enabled: true
-      # (optional) Set a Default CertResolver
+      
       certResolver: acme-dns
+  
   
 
 env:
@@ -34,12 +41,12 @@ env:
         key: storagePath
         name: acme-dns-credentials
 
-# Disable Dashboard
+
 ingressRoute:
   dashboard:
-    enabled: false
+    enabled: true
 
-# Persistent Storage
+
 persistence:
   enabled: true
   name: ssl-certs

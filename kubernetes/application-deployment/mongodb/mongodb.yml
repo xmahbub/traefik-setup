@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  mongodb-services
+  namespace: applications
+spec:
+  selector:
+    app:  mongo
+  
+  type:  ClusterIP
+  ports:
+  - name:  mongo
+    port:  27017 
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mongo
+  namespace: applications
+spec:
+  entryPoints:
+  - database
+  routes:
+  - match: HostSNI(`*`)
+    services:
+    - name: mongodb-services
+      port: 27017
+  
+  tls:                              
+    certResolver: acme-dns          
+    domains:                    
+    - main: mongodb.securedsoft.online 
