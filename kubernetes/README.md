@@ -39,8 +39,7 @@ kubectl apply -f acme-dns-credentials.yml
 
 ### Pre-Check uninstall helm from kube-system
 ```
-  helm uninstall traefik -n kube-system
-
+helm uninstall traefik -n kube-system
 ```
 
 ### Install Traefik 
