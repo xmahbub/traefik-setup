@@ -1,32 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iecbd
+  name: bdmarket
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: iecbd
+      app: bdmarket
   template:
     metadata:
       labels:
-        app: iecbd
+        app: bdmarket
     spec:
       containers:
-      - name: iecbd
-        image: larrylinus/securedsoft:iecbd-latest
-        ports:
-        - containerPort: 3000
+      - name: bdmarket
+        image: larrylinus/securedsoft:bdmarket-menual
+        # resources:
+        #     limits:
+        #       memory: "4Gi"
+        #       cpu: "4000m"
+        #     requests:
+        #       memory: "2Gi"
+        #       cpu: "2000m"
+        
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name:  iecbd
+  name:  bdmarket
   namespace: applications
 spec:
   selector:
-    app:  iecbd
+    app:  bdmarket
   
   type:  ClusterIP
   ports:
@@ -38,11 +44,11 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: iecbd # Name of the ingress object
+  name: bdmarket # Name of the ingress object
   namespace: applications # Name of the namespace
 spec:
   rules:
-  - host: "iecbd.securedsoft.online"  # Your hostname
+  - host: "bdmarket.securedsoft.online"  # Your hostname
     http:
       paths:
       # Path-based routing settings:
@@ -50,6 +56,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: iecbd  # The name of the service
+            name: bdmarket  # The name of the service
             port:
               number: 3000  # Service Portnumber

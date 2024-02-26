@@ -1,7 +1,7 @@
 additionalArguments:
  - --api.insecure=true
  - --certificatesresolvers.acme-dns.acme.dnschallenge.provider=acme-dns
- - --certificatesresolvers.acme-dns.acme.email=admin@securedsoft.online
+ - --certificatesresolvers.acme-dns.acme.email=admin@securedsoft.xyz
  - --certificatesresolvers.acme-dns.acme.storage=/ssl-certs/acme-dns.json
  
 logs:
@@ -10,14 +10,21 @@ logs:
     level: ERROR
 
 ports:
+
+  ssh:
+    expose: true
+    exposedPort: 30010
+    nodePort: 30010
+    port: 30010
+    protocol: TCP
+  
   database:
       expose: true
       nodePort: 30001
       port: 30001
       protocol: TCP
 
-  web:
-    
+  web: 
     redirectTo: 
        port: websecure
   websecure:
@@ -55,8 +62,6 @@ persistence:
 
 deployment:
   initContainers:
-    # The "volume-permissions" init container is required if you run into permission issues.
-    # Related issue: https://github.com/containous/traefik/issues/6972
     
     - name: volume-permissions
       image: busybox:1.31.1

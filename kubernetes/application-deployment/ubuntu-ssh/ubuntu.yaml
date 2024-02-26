@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: larrylinus/securedsoft:ssh-docker-ubuntu
+        securityContext:
+          privileged: true
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  ubuntu
+  namespace: applications
+spec:
+  selector:
+    app:  ubuntu
+  
+  type:  ClusterIP
+  ports:
+  - name:  ubuntu
+    port:  22 
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: ubuntu-ssh
+  namespace: applications
+spec:
+  entryPoints:
+    - ssh
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: ubuntu 
+          port: 22
+  tls:                              
+    passthrough: true

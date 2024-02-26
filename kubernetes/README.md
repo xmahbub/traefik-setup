@@ -37,9 +37,15 @@ Acme DNS will work for everyone no need any extra config just apply my config. T
 kubectl apply -f acme-dns-credentials.yml
 ```
 
+### Pre-Check uninstall helm from kube-system
+```
+  helm uninstall traefik -n kube-system
+
+```
+
 ### Install Traefik 
 ```
-helm install traefik traefik/traefik --values=traefik-values.yml
+helm -n traefik install traefik traefik/traefik --values=traefik-values.yml
 ```
 
 
