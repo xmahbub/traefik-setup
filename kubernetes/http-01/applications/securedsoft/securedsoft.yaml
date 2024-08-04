@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: securedsoft
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: securedsoft
+  template:
+    metadata:
+      labels:
+        app: securedsoft
+    spec:
+      containers:
+      - name: securedsoft
+        image: larrylinus/securedsoft:securedsoft-website
+        ports:
+        - containerPort: 3000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  securedsoft
+  namespace: applications
+spec:
+  selector:
+    app:  securedsoft
+  
+  type:  ClusterIP
+  ports:
+  - name:  http
+    port:  3000 
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: securedsoft 
+  namespace: applications
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod 
+
+spec:
+  rules:
+  - host: securedsoft.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: securedsoft
+            port:
+              number: 3000
+  - host: www.securedsoft.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: securedsoft
+            port:
+              number: 3000
+
+  tls:
+  - hosts:
+    - securedsoft.net
+    - www.securedsoft.net
+    secretName: securedsoft-secret
