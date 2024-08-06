@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tourismgoal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tourismgoal
+  template:
+    metadata:
+      labels:
+        app: tourismgoal
+    spec:
+      containers:
+      - name: tourismgoal
+        image: larrylinus/securedsoft:tourismgoal
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tourismgoal
+  namespace: applications
+spec:
+  selector:
+    app: tourismgoal
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tourismgoal
+  namespace: applications
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: tourismgoal.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tourismgoal
+            port:
+              number: 4000
+  tls:
+  - hosts:
+    - tourismgoal.com
+    secretName: tourismgoal-secret

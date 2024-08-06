@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: securedsoft-net
+  namespace: default
+spec:
+  secretName: securedsoft-secret
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: securedsoft.net
+  dnsNames:
+  - securedsoft.net
+  - www.securedsoft.net
+  - traefik.securedsoft.net

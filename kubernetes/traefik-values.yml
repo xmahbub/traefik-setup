@@ -1,85 +1,46 @@
-additionalArguments:
- - --api.insecure=true
- - --certificatesresolvers.acme-dns.acme.dnschallenge.provider=acme-dns
- - --certificatesresolvers.acme-dns.acme.email=admin@securedsoft.xyz
- - --certificatesresolvers.acme-dns.acme.storage=/ssl-certs/acme-dns.json
- 
-logs:
+globalArguments:
+  - "--global.sendanonymoususage=false"
+  - "--global.checknewversion=false"
 
-  general:
-    level: ERROR
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+  - "--log.level=INFO"
+
+deployment:
+  enabled: true
+  replicas: 3
+  annotations: {}
+  podAnnotations: {}
+  additionalContainers: []
+  initContainers: []
 
 ports:
-
-  ssh:
-    expose: true
-    exposedPort: 30010
-    nodePort: 30010
-    port: 30010
-    protocol: TCP
-  
-  database:
-      expose: true
-      nodePort: 30001
-      port: 30001
-      protocol: TCP
-
-  web: 
-    redirectTo: 
-       port: websecure
+  web:
+    redirectTo:
+      port: websecure
+      priority: 10
   websecure:
+    http3:
+      enabled: true
+    advertisedPort: 4443
     tls:
       enabled: true
       
-      certResolver: acme-dns
-  
-  
-
-env:
-
-  - name: ACME_DNS_API_BASE
-    valueFrom:
-      secretKeyRef:
-        key: apiUrl
-        name: acme-dns-credentials
-  - name: ACME_DNS_STORAGE_PATH
-    valueFrom:
-      secretKeyRef:
-        key: storagePath
-        name: acme-dns-credentials
-
-
 ingressRoute:
   dashboard:
+    enabled: false
+
+providers:
+  kubernetesCRD:
     enabled: true
+    ingressClass: traefik
+    allowExternalNameServices: true
+  kubernetesIngress:
+    enabled: true
+    allowExternalNameServices: true
+    publishedService:
+      enabled: false
 
-
-persistence:
+rbac:
   enabled: true
-  name: ssl-certs
-  size: 1Gi
-  path: /ssl-certs
 
-deployment:
-  initContainers:
-    
-    - name: volume-permissions
-      image: busybox:1.31.1
-      command:
-        [
-          "sh",
-          "-c",
-          "touch /ssl-certs/acme-dns.json; chown 65532 /ssl-certs/acme-dns.json; chmod -v 600 /ssl-certs/acme-dns.json && touch /ssl-certs/records.json; chown 65532 /ssl-certs/records.json; chmod -v 600 /ssl-certs/records.json",
-        ]
-      securityContext:
-        runAsNonRoot: false
-        runAsGroup: 0
-        runAsUser: 0
-      volumeMounts:
-        - name: ssl-certs
-          mountPath: /ssl-certs
-
-# Set Traefik as your default Ingress Controller, according to Kubernetes 1.19+ changes.
-ingressClass:
-  enabled: true
-  isDefaultClass: true

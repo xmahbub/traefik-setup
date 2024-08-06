@@ -58,7 +58,7 @@ metadata:
   namespace: applications # Name of the namespace
 spec:
   rules:
-  - host: "mahbub.securedsoft.online"  # Your hostname
+  - host: "mahbub.securedsoft.xyz"  # Your hostname
     http:
       paths:
       # Path-based routing settings:

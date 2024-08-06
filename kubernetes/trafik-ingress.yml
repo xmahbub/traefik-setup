@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-traefik
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+  - host: "traefik.securedsoft.net"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 9000
+  tls:
+  - hosts:
+    - "traefik.securedsoft.net"
+    secretName: traefik-dashboard-tls
